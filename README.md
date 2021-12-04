@@ -1,4 +1,4 @@
-![rfxcom logo](logo.png)
+![rfxcom logo](logo.jpg)
 # Rfxcom2Mqtt
 A python gateway to publish [Rfxcom](http://www.rfxcom.com) sensor values to an MQTT broker.
 
