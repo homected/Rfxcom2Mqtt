@@ -22,7 +22,7 @@ The [Rfxcom](http://www.rfxcom.com) supports several sensors, I had support for 
 - [ ] ATI Remote Wonder
 - [ ] HomeEasy
 - [ ] Ikea-Koppla
-- [x] Oregon scientific ([see list](Oregon supported devices.htm))
+- [x] Oregon scientific (([see list](Oregon supported devices.htm)))
 - [x] Visonic
 - [x] X10 RF
 - [x] X10 security
