@@ -25,7 +25,7 @@ The [Rfxcom](http://www.rfxcom.com) supports several sensors, I had support for 
 - [x] Oregon scientific ([list](http://www.rfxcom.com/epages/78165469.sf/en_GB/#oregon) of supported sensors)
 - [x] RFXCOM sensors
 - [x] Visonic
-- [x] X10 RF
+- [ ] X10 RF
 - [x] X10 security
 
 ## Installation
