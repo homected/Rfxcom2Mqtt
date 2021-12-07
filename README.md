@@ -8,7 +8,7 @@ The source code for decoding the Rfxcom protocol comes from a very old project I
 ## Introduction
 Several years ago I coded some programs for a protocol called xAP, one of this was a Rfxcom gateway to this protocol because I had a now discontinued Rfxcom device to decode X10RF protocol, [Oregon Scientific](http://global.oregonscientific.com/) and [Visonic](https://www.visonic.com/) sensors. Recently I buyed an [Oregon Scientific LW301 wheather station](https://www.oregonscientificstore.com/c-38-lw301.aspx) with the hope to add it to my home automation system based on [home assistant](https://www.home-assistant.io/). This wheater station has a gateway to sends the sensor data to a web platform that currently not works. I know this before I buyed but the price is good for the sensors it includes. Additionaly I had several [Oregon Scientific](http://global.oregonscientific.com/) temperature with humidity sensors in a box, so I started to think to retrieve my old code done for xAP and create this gateway for the MQTT protocol.
 
-If you are interested you can find a detailed list of the [Oregon Scientific](http://global.oregonscientific.com/) sensors supported in this [link](/Oregon%20supported%20devices.htm)
+If you are interested you can find a detailed list of the [Oregon Scientific](http://global.oregonscientific.com/) sensors supported in this [link](http://www.rfxcom.com/epages/78165469.sf/en_GB/#oregon)
 
 Coming back to my rfxcom device, this model is a box called "Universal Interface version 1", now it is discontinued from [Rfxcom](http://www.rfxcom.com). But for give you some details, it offers only an USB port and a BNC connector for the antenna. Inside, there are one small PCB receiver with support for some 433MHz RF devices and another small PCB receiver for [Visonic](https://www.visonic.com/) 866MHz devices (I bought this PCB apart).
 
@@ -22,7 +22,7 @@ The [Rfxcom](http://www.rfxcom.com) supports several sensors, I had support for 
 - [ ] ATI Remote Wonder
 - [ ] HomeEasy
 - [ ] Ikea-Koppla
-- [x] Oregon scientific ([see list](/Oregon%20supported%20devices.htm))
+- [x] Oregon scientific ([see list](http://www.rfxcom.com/epages/78165469.sf/en_GB/#oregon))
 - [x] Visonic
 - [x] X10 RF
 - [x] X10 security
