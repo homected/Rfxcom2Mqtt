@@ -14,6 +14,18 @@ Coming back to my rfxcom device, this model is a box called "Universal Interface
 
 My idea is connect this [Rfxcom](http://www.rfxcom.com) device to a [Raspberry Pi](https://www.raspberrypi.org/) and use this program for publish the sensor information received by the [Rfxcom](http://www.rfxcom.com) device to the MQTT protocol. This program is not limited to the [Raspberry Pi](https://www.raspberrypi.org/) so you can use in other platforms.
 
+## Supported sensors
+
+The [Rfxcom](http://www.rfxcom.com) supports several sensors, I had support for all of them in my old xAP project, but for this gateway I only support some of them, here is the list of sensors supported by the [Rfxcom](http://www.rfxcom.com) device and the support of this application:
+
+- [ ] ARC-Tech (KlikOn-KlikOff, ELRO AB600, NEXA and Domia lite)
+- [ ] ATI Remote Wonder
+- [ ] HomeEasy
+- [ ] Ikea-Koppla
+- [x] Oregon scientific ([see list](Oregon supported devices.htm))
+- [x] Visonic
+- [x] X10 RF
+- [x] X10 security
 
 ## Installation
 
