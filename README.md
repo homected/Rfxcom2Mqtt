@@ -44,7 +44,6 @@ The [Rfxcom](http://www.rfxcom.com) supports several sensors, I had support for 
    ```sh
    sudo apt install python3-pip
    pip3 install pyserial
-   pip3 install untangle
    pip3 install paho-mqtt
    ```
  
