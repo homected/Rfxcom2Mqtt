@@ -1,0 +1,12 @@
+[Unit]
+Description=RFXCOM to MQTT Service
+After=multi-user.target
+	
+[Service]
+Type=idle
+WorkingDirectory=/home/pi/
+User=pi
+ExecStart=/usr/bin/python3 /home/pi/rfxcom2mqtt/rfxcom2mqtt.py
+	
+[Install]
+WantedBy=multi-user.target
