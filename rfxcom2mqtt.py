@@ -11,15 +11,15 @@ from rfxsensor import *
 from security import *
 from x10rf import *
 
-COM_PORT = "COMX"					# Something like /dev/ttyUSB0 or COM1 or /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0
+COM_PORT = "COMX"			# Something like /dev/ttyUSB0 or COM1 or /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0
 MQTT_Host = "AAA.BBB.CCC.DDD"   	# IP Address of the MQTT broker
-MQTT_Port = "1883"					# Port of the MQTT broker, for example 1883
-MQTT_User = "usernamed"				# Username to authenticate into the MQTT broker
+MQTT_Port = "1883"			# Port of the MQTT broker, for example 1883
+MQTT_User = "usernamed"			# Username to authenticate into the MQTT broker
 MQTT_Password = "password"  		# Password to authenticate into the MQTT broker
 MQTT_Topic = "maintopic/subtopic"	# Topic for publish data
-MQTT_QoS = 2						# Quality Of Service level
-MQTT_Retain = True					# Retain flag
-DEBUG = False						# Debug flag to print in console debug data
+MQTT_QoS = 2				# Quality Of Service level
+MQTT_Retain = True			# Retain flag
+DEBUG = False				# Debug flag to print in console debug data
 
 def configure_rfxcom_port(port=COM_PORT, baudrate=4800):
 	ser = serial.Serial()
@@ -142,6 +142,8 @@ def get_rfxcom_data(rfxcom, buffer):
 				if msgFound:
 					buffer = buffer[i + msgLength:bytesInBuffer].copy()
 					bufferChecking = True if len(buffer) > 0 else False
+					if DEBUG:
+						print(datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f") + " Message bytes:", subBuffer[:msgLength])
 					publishToMqtt(sensorData)
 					break
 				else:
@@ -169,9 +171,8 @@ def publishToMqtt(sensorData):
 				else:
 					client.publish(MQTT_Topic + '/' + addr + '/' + sensorData[3 + x][0], '{"state":"'+ sensorData[3 + x][1] +'"}', qos=MQTT_QoS, retain=MQTT_Retain)
 					debugMsg = debugMsg + " " + str(sensorData[3 + x][1])
-				if DEBUG:
-					timestampStr = datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f")
-					print(timestampStr + " " + debugMsg)
+			if DEBUG:
+				print(datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f") + " " + debugMsg)
 				
 
 ### MAIN ### 
