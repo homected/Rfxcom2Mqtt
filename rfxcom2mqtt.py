@@ -4,6 +4,7 @@
 # there may be a few libraries that need installing. 
 import serial
 import paho.mqtt.client as mqtt
+from datetime import datetime
 from common import *
 from oregon import *
 from rfxsensor import *
@@ -169,7 +170,8 @@ def publishToMqtt(sensorData):
 					client.publish(MQTT_Topic + '/' + addr + '/' + sensorData[3 + x][0], '{"state":"'+ sensorData[3 + x][1] +'"}', qos=MQTT_QoS, retain=MQTT_Retain)
 					debugMsg = debugMsg + " " + str(sensorData[3 + x][1])
 				if DEBUG:
-					print(debugMsg)
+					timestampStr = datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f")
+					print(timestampStr + " " + debugMsg)
 				
 
 ### MAIN ### 
