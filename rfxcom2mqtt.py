@@ -158,7 +158,7 @@ def get_rfxcom_data(rfxcom, buffer):
 def publishToMqtt(sensorData):
 	
 	sensorType = sensorData[0]
-	if sensorType == RFXCOM_SENSOR_SECURITY or sensorType == RFXCOM_SENSOR_OREGON or sensorType == RFXCOM_SENSOR_RFXCOM or RFXCOM_SENSOR_X10:
+	if sensorType == RFXCOM_SENSOR_SECURITY or sensorType == RFXCOM_SENSOR_OREGON or sensorType == RFXCOM_SENSOR_RFXCOM or sensorType == RFXCOM_SENSOR_X10:
 		addr = sensorData[1]
 		dataFields = sensorData[2]
 		debugMsg = "SensorType: " + str(sensorType) + " Addr: " + addr + " Fields: " + str(dataFields) + " Data:"
