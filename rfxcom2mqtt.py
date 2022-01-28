@@ -29,9 +29,9 @@ def configure_rfxcom_port(port=COM_PORT, baudrate=4800):
 	ser.parity = serial.PARITY_NONE
 	ser.stopbits = serial.STOPBITS_ONE
 	ser.timeout = 1
-	ser.xonxoff = False		#disable software flow control
-	ser.rtscts = False	  	#disable hardware (RTS/CTS) flow control
-	ser.dsrdtr = False	  	#disable hardware (DSR/DTR) flow control
+	ser.xonxoff = False	#disable software flow control
+	ser.rtscts = False	#disable hardware (RTS/CTS) flow control
+	ser.dsrdtr = False	#disable hardware (DSR/DTR) flow control
 	
 	try:
 		ser.open()
@@ -73,7 +73,7 @@ def close_rfxcom_port(rfxcom):
 			rfxcom.close()
 
 		except Exception as ex:
-				print("error closing serial port: " + str(ex))
+			print("error closing serial port: " + str(ex))
 
 def get_rfxcom_data(rfxcom, buffer):
 
@@ -107,7 +107,7 @@ def get_rfxcom_data(rfxcom, buffer):
 					msgFound = True
 					msgLength = getX10rfMsgLength(subBuffer)
 					sensorData = processX10rfMsg(subBuffer, sensorType)
-				elif (sensorType := isDM10(subBuffer)) != RFXCOM_X10RF_MSG_UNKNOWN:
+				elif (sensorType := isDM10(subBuffer)) != RFXCOM_DM10_MSG_UNKNOWN:
 					msgFound = True
 					msgLength = getX10rfMsgLength(subBuffer)
 					sensorData = processX10rfMsg(subBuffer, sensorType)
@@ -137,7 +137,7 @@ def get_rfxcom_data(rfxcom, buffer):
 					msgFound = True
 					msgLength = getRfxSensorMsgLength(subBuffer)
 					sensorData = processRfxsensorMsg(subBuffer, sensorType)
-							  
+
 				# If message found remove the message and the precedent bytes from buffer
 				if msgFound:
 					buffer = buffer[i + msgLength:bytesInBuffer].copy()
@@ -171,6 +171,7 @@ def publishToMqtt(sensorData):
 				else:
 					client.publish(MQTT_Topic + '/' + addr + '/' + sensorData[3 + x][0], '{"state":"'+ sensorData[3 + x][1] +'"}', qos=MQTT_QoS, retain=MQTT_Retain)
 					debugMsg = debugMsg + " " + str(sensorData[3 + x][1])
+
 			if DEBUG:
 				print(datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f") + " " + debugMsg)
 				
