@@ -4,31 +4,32 @@ from common import *
 
 # Message Types
 RFXCOM_X10RF_MSG_UNKNOWN	= 0
-RFXCOM_X10RF_MSG			= 1
-RFXCOM_DM10_MSG				= 2
+RFXCOM_DM10_MSG_UNKNOWN		= 0
+RFXCOM_X10RF_MSG		= 1
+RFXCOM_DM10_MSG			= 2
 
 # Function codes
-X10RF_ALL_UNITS_OFF		= 0		# Not exists for X10RF protocol
+X10RF_ALL_UNITS_OFF		= 0	# Not exists for X10RF protocol
 X10RF_ALL_LIGHTS_ON		= 1
-X10RF_ON				= 2
-X10RF_OFF				= 3
-X10RF_DIM				= 4
+X10RF_ON			= 2
+X10RF_OFF			= 3
+X10RF_DIM			= 4
 X10RF_BRIGHT			= 5
-X10RF_ALL_LIGHTS_OFF	= 6	
-#X10RF_EXTENDED_CODE	= 7		# Not exists for X10RF protocol
-#X10RF_HAIL_REQUEST		= 8		# Not exists for X10RF protocol
-#X10RF_HAIL_ACK			= 9		# Not exists for X10RF protocol
+X10RF_ALL_LIGHTS_OFF		= 6	
+#X10RF_EXTENDED_CODE		= 7	# Not exists for X10RF protocol
+#X10RF_HAIL_REQUEST		= 8	# Not exists for X10RF protocol
+#X10RF_HAIL_ACK			= 9	# Not exists for X10RF protocol
 #X10RF_PRESET_DIM_1		= 10	# Not exists for X10RF protocol
 #X10RF_PRESET_DIM_2		= 11	# Not exists for X10RF protocol
-#X10RF_EXTENDED_DATA	= 12	# Not exists for X10RF protocol
+#X10RF_EXTENDED_DATA		= 12	# Not exists for X10RF protocol
 #X10RF_STATUS_ON		= 13	# Not exists for X10RF protocol
 #X10RF_STATUS_OFF		= 14	# Not exists for X10RF protocol
-#X10RF_STATUS_REQUEST   = 15	# Not exists for X10RF protocol
+#X10RF_STATUS_REQUEST   	= 15	# Not exists for X10RF protocol
 
 def isX10RF(msg):
 	
 	# Check 32 bit message length
-	if ((msg[0] & 0x7F) == 0x20):
+	if ((msg[0] & 0x7F) == 0x20) and (len(msg) >= 5):
 		# Check bytes
 		if ((msg[1] + msg[2] == 0xFF) and (msg[3] + msg[4] == 0xFF)):
 			return RFXCOM_X10RF_MSG
@@ -38,12 +39,12 @@ def isX10RF(msg):
 def isDM10(msg):
 	
 	# Check 32 bit message length
-	if ((msg[0] & 0x7F) == 0x20):
+	if ((msg[0] & 0x7F) == 0x20) and (len(msg) >= 5):
 		# Check bytes
 		if (((msg[1] ^ msg[2]) == 0xFE) and ((msg[3] ^ msg[4]) == 0xFF)):
 			return RFXCOM_DM10_MSG
 
-	return RFXCOM_X10RF_MSG_UNKNOWN
+	return RFXCOM_DM10_MSG_UNKNOWN
 
 def getX10rfMsgLength(msg):
 	
