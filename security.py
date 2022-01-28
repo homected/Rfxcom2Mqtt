@@ -3,23 +3,23 @@
 from common import *
 
 # Message Types
-RFXCOM_SECURITY_MSG_UNKNOWN	 	= 0
+RFXCOM_SECURITY_MSG_UNKNOWN	= 0
 RFXCOM_SECURITY_MSG_POWERCODE	= 1
 RFXCOM_SECURITY_MSG_CODESECURE	= 2
-RFXCOM_SECURITY_MSG_X10SEC		= 3
+RFXCOM_SECURITY_MSG_X10SEC	= 3
 RFXCOM_SECURITY_JAMMING_DETECT	= 4
-RFXCOM_SECURITY_JAMMING_END		= 5
+RFXCOM_SECURITY_JAMMING_END	= 5
 
 # Message code format:
 # Bit	7 6 5 4 3 2 1 0
-#		| | | | | | | |______ 0: Battery OK		1: Battery low
-#	  	| | | | | | |________ 0: Sensor			1: Keyfob
-#		| | | | | |__________ 0: No Visonic		1: Visonic
-#		| | | | |____________ 0: Door/Window	1: Motion
-#		| | | |______________ 0: 				1: 
-#		| | |________________ 0: 				1: 
-#		| |__________________ 0: Tamper close	1: Tamper open
-#		|____________________ 0: Alert			1: Normal
+#	| | | | | | | |______ 0: Battery OK	1: Battery low
+#	| | | | | | |________ 0: Sensor		1: Keyfob
+#	| | | | | |__________ 0: No Visonic	1: Visonic
+#	| | | | |____________ 0: Door/Window	1: Motion
+#	| | | |______________ 0: 		1: 
+#	| | |________________ 0: 		1: 
+#	| |__________________ 0: Tamper close	1: Tamper open
+#	|____________________ 0: Alert		1: Normal
 
 
 def even_parity(byte_to_check):
@@ -50,7 +50,7 @@ def isSecurity(msg):
 	msgtype = RFXCOM_SECURITY_MSG_UNKNOWN
 
 	# Check 41 bit message length for a Visonic PowerCode message
-	if ((msg[0] & 0x7F) == 0x29):
+	if ((msg[0] & 0x7F) == 0x29) and (len(msg) >= 7):
 		
 		# Check bytes
 		if (msg[3] + msg[4] == 0xFF) and (even_parity(msg[5]) == ((msg[6] & 0x80) >> 7)):
@@ -69,15 +69,17 @@ def isSecurity(msg):
 	#}
 	
 	# Check if is a X10Security message
-	elif (msg[1] == ((msg[2] & 0xF0) + (0xF - (msg[2] & 0xF)))) and ((msg[3] ^ msg[4]) == 0xFF):
+	elif (len(msg) >= 5):
 		
-		# Check for jamming
-		if secIsJammingDetect(msg):
-			msgtype = RFXCOM_SECURITY_JAMMING_DETECT
-		elif secIsJammingEnd(msg):
-			msgtype = RFXCOM_SECURITY_JAMMING_END
-		else:
-			msgtype = RFXCOM_SECURITY_MSG_X10SEC
+		if (msg[1] == ((msg[2] & 0xF0) + (0xF - (msg[2] & 0xF)))) and ((msg[3] ^ msg[4]) == 0xFF):
+		
+			# Check for jamming
+			if secIsJammingDetect(msg):
+				msgtype = RFXCOM_SECURITY_JAMMING_DETECT
+			elif secIsJammingEnd(msg):
+				msgtype = RFXCOM_SECURITY_JAMMING_END
+			else:
+				msgtype = RFXCOM_SECURITY_MSG_X10SEC
 
 	return msgtype
 
