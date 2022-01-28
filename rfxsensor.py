@@ -34,14 +34,14 @@ def crc8(msg):
 def isRfxSensor(msg):
 
 	# Check 32 bit for a Rfxsensor message
-	if (msg[0] & 0x7F) == 32:
+	if (((msg[0] & 0x7F) == 32) and (len(msg) >= 5)):
 		parity = (((msg[1] >> 4) & 0x0F) + (msg[1] & 0x0F) + ((msg[2] >> 4) & 0x0F) + (msg[2] & 0x0F) +
 			((msg[3] >> 4) & 0x0F) + (msg[3] & 0x0F) + ((msg[4] >> 4) & 0x0F)) & 0x0F
 		if (parity == (msg[4] & 0x0F)) and (msg[1] + (msg[2] ^ 0x0F) == 0xFF):
 			return RFXCOM_RFXSENSOR_MSG_RFXSENSOR
 
 	# Check 48 bit for a RFXMeter or RFXPower or RFXSensorL message
-	elif (msg[0] & 0x7F) == 48:
+	elif (((msg[0] & 0x7F) == 48) and (len(msg) >= 7)):
 		if crc8(msg) == msg[6]:
 			return RFXCOM_RFXSENSOR_MSG_RFXSENSOR
 
