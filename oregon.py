@@ -3,7 +3,7 @@
 from common import *
 
 # Message Types
-RFXCOM_OREGON_MSG_UNKNOWN   	= 0
+RFXCOM_OREGON_MSG_UNKNOWN   = 0
 RFXCOM_OREGON_MSG_TEMP1	 	= 1
 RFXCOM_OREGON_MSG_TEMP2		= 2
 RFXCOM_OREGON_MSG_TEMP3		= 3
@@ -34,6 +34,7 @@ RFXCOM_OREGON_MSG_ELEC2		= 25
 RFXCOM_OREGON_BAT_UNKNOWN	= 255
 RFXCOM_OREGON_BAT_OK		= 254
 RFXCOM_OREGON_BAT_LOW		= 253
+
 
 def wrchannel(value):
 	
@@ -280,111 +281,118 @@ def wrbattery(value):
 def isOregon(msg):
 	
 	# Check 56 bit or >59 bit message length for a Oregon message
-	if (((msg[0] & 0x7F) == 56) or ((msg[0] & 0x7F) > 59)):
+	if ((((msg[0] & 0x7F) == 56) and (len(msg) >= 8)) or (((msg[0] & 0x7F) > 59) and (len(msg) >= 9))):
+		
+		# Check the message has all the necessary bytes
+		expectedMsgLength = getOregonMsgLength(msg)
+		receivedMsgLength = len(msg)
+		if receivedMsgLength < expectedMsgLength:
+			return RFXCOM_OREGON_MSG_UNKNOWN
+		
 		# Check for TEMP1 sensor type
-		if ((msg[1] == 0x0A) and (msg[2] == 0x4D) and ((msg[0] & 0x7F) >= 72)):
+		if ((msg[1] == 0x0A) and (msg[2] == 0x4D) and ((msg[0] & 0x7F) >= 72) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TEMP1
 
 		# Check for TEMP2 sensor type
-		elif ((msg[1] == 0xEA) and (msg[2] == 0x4C) and ((msg[0] & 0x7F) >= 60)):
+		elif ((msg[1] == 0xEA) and (msg[2] == 0x4C) and ((msg[0] & 0x7F) >= 60) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TEMP2
 
 		# Check for TEMP3 sensor type
-		elif ((msg[1] == 0xCA) and (msg[2] == 0x48) and ((msg[0] & 0x7F) >= 60)):
+		elif ((msg[1] == 0xCA) and (msg[2] == 0x48) and ((msg[0] & 0x7F) >= 60) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TEMP3
 
 		# Check for TEMP4 sensor type
-		elif (((msg[1] & 0x0F) == 0x0A) and (msg[2] == 0xDC) and ((msg[0] & 0x7F) >= 64)):
+		elif (((msg[1] & 0x0F) == 0x0A) and (msg[2] == 0xDC) and ((msg[0] & 0x7F) >= 64) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TEMP4
 
 		# Check for TH1 sensor type
-		elif ((msg[1] == 0x1A) and (msg[2] == 0x2D) and ((msg[0] & 0x7F) >= 72)):
+		elif ((msg[1] == 0x1A) and (msg[2] == 0x2D) and ((msg[0] & 0x7F) >= 72) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TH1
 
 		# Check for TH2 sensor type
-		elif ((msg[1] == 0xFA) and (msg[2] == 0x28) and ((msg[0] & 0x7F) >= 72)):
+		elif ((msg[1] == 0xFA) and (msg[2] == 0x28) and ((msg[0] & 0x7F) >= 72) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TH2
 
 		# Check for TH3 sensor type
-		elif (((msg[1] & 0x0F) == 0x0A) and (msg[2] == 0xCC) and ((msg[0] & 0x7F) >= 72)):
+		elif (((msg[1] & 0x0F) == 0x0A) and (msg[2] == 0xCC) and ((msg[0] & 0x7F) >= 72) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TH3
 
 		# Check for TH4 sensor type
-		elif ((msg[1] == 0xCA) and (msg[2] == 0x2C) and ((msg[0] & 0x7F) >= 72)):
+		elif ((msg[1] == 0xCA) and (msg[2] == 0x2C) and ((msg[0] & 0x7F) >= 72) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TH4
 
 		# Check for TH5 sensor type
-		elif ((msg[1] == 0xFA) and (msg[2] == 0xB8) and ((msg[0] & 0x7F) >= 72)):
+		elif ((msg[1] == 0xFA) and (msg[2] == 0xB8) and ((msg[0] & 0x7F) >= 72) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TH5
 		
 		# Check for TH6 sensor type
-		elif ((msg[1] == 0x1A) and (msg[2] == 0x3D) and ((msg[0] & 0x7F) >= 72)):
+		elif ((msg[1] == 0x1A) and (msg[2] == 0x3D) and ((msg[0] & 0x7F) >= 72) and (receivedMsgLength >= 10)):
 			return RFXCOM_OREGON_MSG_TH6
 
 		# Check for THB1 sensor type
-		elif ((msg[1] == 0x5A) and (msg[2] == 0x5D) and ((msg[0] & 0x7F) >= 88)):
+		elif ((msg[1] == 0x5A) and (msg[2] == 0x5D) and ((msg[0] & 0x7F) >= 88) and (receivedMsgLength >= 12)):
 			return RFXCOM_OREGON_MSG_THB1
 
 		# Check for THB2 sensor type
-		elif ((msg[1] == 0x5A) and (msg[2] == 0x6D) and ((msg[0] & 0x7F) >= 88)):
+		elif ((msg[1] == 0x5A) and (msg[2] == 0x6D) and ((msg[0] & 0x7F) >= 88) and (receivedMsgLength >= 12)):
 			return RFXCOM_OREGON_MSG_THB2
 
 		# Check for RAIN1 sensor type
-		elif ((msg[1] == 0x2A) and (msg[2] == 0x1D) and ((msg[0] & 0x7F) >= 80)):
+		elif ((msg[1] == 0x2A) and (msg[2] == 0x1D) and ((msg[0] & 0x7F) >= 80) and (receivedMsgLength >= 11)):
 			return RFXCOM_OREGON_MSG_RAIN1
 
 		# Check for RAIN2 sensor type
-		elif ((msg[1] == 0x2A) and (msg[2] == 0x19) and ((msg[0] & 0x7F) >= 84)):
+		elif ((msg[1] == 0x2A) and (msg[2] == 0x19) and ((msg[0] & 0x7F) >= 84) and (receivedMsgLength >= 12)):
 			return RFXCOM_OREGON_MSG_RAIN2
 
 		# Check for RAIN3 sensor type
-		elif ((msg[1] == 0x06) and (msg[2] == 0xE4) and ((msg[0] & 0x7F) >= 84)):
+		elif ((msg[1] == 0x06) and (msg[2] == 0xE4) and ((msg[0] & 0x7F) >= 84) and (receivedMsgLength >= 12)):
 			return RFXCOM_OREGON_MSG_RAIN3
 
 		# Check for WIND1 sensor type
-		elif ((msg[1] == 0x1A) and (msg[2] == 0x99) and ((msg[0] & 0x7F) >= 80)):
+		elif ((msg[1] == 0x1A) and (msg[2] == 0x99) and ((msg[0] & 0x7F) >= 80) and (receivedMsgLength >= 11)):
 			return RFXCOM_OREGON_MSG_WIND1
 
 		# Check for WIND2 sensor type
-		elif ((msg[1] == 0x1A) and (msg[2] == 0x89) and ((msg[0] & 0x7F) >= 80)):
+		elif ((msg[1] == 0x1A) and (msg[2] == 0x89) and ((msg[0] & 0x7F) >= 80) and (receivedMsgLength >= 11)):
 			return RFXCOM_OREGON_MSG_WIND2
 
 		# Check for WIND3 sensor type
-		elif ((msg[1] == 0x3A) and (msg[2] == 0x0D) and ((msg[0] & 0x7F) >= 80)):
+		elif ((msg[1] == 0x3A) and (msg[2] == 0x0D) and ((msg[0] & 0x7F) >= 80) and (receivedMsgLength >= 11)):
 			return RFXCOM_OREGON_MSG_WIND3
 
 		# Check for UV1 sensor type
-		elif ((msg[1] == 0xEA) and (msg[2] == 0x7C) and ((msg[0] & 0x7F) >= 60)):
+		elif ((msg[1] == 0xEA) and (msg[2] == 0x7C) and ((msg[0] & 0x7F) >= 60) and (receivedMsgLength >= 9)):
 			return RFXCOM_OREGON_MSG_UV1
 
 		# Check for UV2 sensor type
-		elif ((msg[1] == 0xDA) and (msg[2] == 0x78) and ((msg[0] & 0x7F) >= 64)):
+		elif ((msg[1] == 0xDA) and (msg[2] == 0x78) and ((msg[0] & 0x7F) >= 64) and (receivedMsgLength >= 9)):
 			return RFXCOM_OREGON_MSG_UV2
 
 		# Check for DT1 sensor type
-		elif (((msg[1] & 0x0F) == 0x0A) and (msg[2] == 0xEC) and ((msg[0] & 0x7F) >= 96)):
+		elif (((msg[1] & 0x0F) == 0x0A) and (msg[2] == 0xEC) and ((msg[0] & 0x7F) >= 96) and (receivedMsgLength >= 13)):
 			return RFXCOM_OREGON_MSG_DT1
 
 		# Check for WEIGHT1 sensor type
-		elif ((msg[0] & 0x7F) == 56):
+		elif (((msg[0] & 0x7F) == 56) and (receivedMsgLength >= 8)):
 			return RFXCOM_OREGON_MSG_WEIGHT1
 
 		# Check for WEIGHT2 sensor type
-		elif (((msg[1] & 0x0F) == 0x03) and ((msg[0] & 0x7F) == 64)):
+		elif (((msg[1] & 0x0F) == 0x03) and ((msg[0] & 0x7F) == 64) and (receivedMsgLength >= 6)):
 			return RFXCOM_OREGON_MSG_WEIGHT2
 
 		# Check for ELEC1 sensor type
-		elif ((msg[1] == 0xEA) and ((msg[2] & 0xC0) == 0x00) and ((msg[0] & 0x7F) >= 64)):
+		elif ((msg[1] == 0xEA) and ((msg[2] & 0xC0) == 0x00) and ((msg[0] & 0x7F) >= 64) and (receivedMsgLength >= 9)):
 			return RFXCOM_OREGON_MSG_ELEC1
 
 		# Check for ELEC2 sensor type
-		elif (((msg[1] == 0x1A) or (msg[1] == 0x2A) or (msg[1] == 0x3A)) and ((msg[0] & 0x7F) == 108)):
+		elif (((msg[1] == 0x1A) or (msg[1] == 0x2A) or (msg[1] == 0x3A)) and ((msg[0] & 0x7F) == 108) and (receivedMsgLength >= 14)):
 			return RFXCOM_OREGON_MSG_ELEC2
 		
 		# Return sensor type unknown
 		else:
 			return RFXCOM_OREGON_MSG_UNKNOWN
-		
+
 	else:
 		return RFXCOM_OREGON_MSG_UNKNOWN
 
