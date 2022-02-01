@@ -111,12 +111,21 @@ The [Rfxcom](http://www.rfxcom.com) supports several sensors, I had support for 
 
 ## Usage
 
-The values of the energy monitor will be published under the topic set in **MQTT_Topic** inside the program file and these are the published endpoints:
+The values received by the rfxcom device will be published under the topic set in **MQTT_Topic** inside the program file into the MQTT topic **MQTT_Topic**/sensorAddress/value. 
 
-- **Monitor temperature**: *MQTT_Topic*/CurrentCost/Temperature
-- **Total power**: *MQTT_Topic*/CurrentCost/Power/Total/chX, where X is the channel number (1, 2 or 3).
-- **Appliance power**: *MQTT_Topic*/CurrentCost/Power/ApplianceY/ChX, where Y is the appliance number (1 to 9) and X is the channel number (1, 2 or 3).
-- **Impulse sensor**: *MQTT_Topic*/CurrentCost/Meter/SensorY, where Y is the impulse meter sensor number (1 to 9).
+### Examples
+following there are some examples from Oregon sensors with **MQTT_Topic** set to "myTopic/rfxcom":
+
+- **myTopic/rfxcom/0500472/Temperature**: {"state":"24.1","unit_of_measurement":"°C"}
+- **myTopic/rfxcom/0500472/Humidity**: {"state":"22","unit_of_measurement":"%"}
+- **myTopic/rfxcom/0500472/BatteryLow**: {"state":"0"}
+- **myTopic/rfxcom/0E00EC0/Rain rate**: {"state":"0.0","unit_of_measurement":"mm/hr"}
+- **myTopic/rfxcom/0E00EC0/Rain total**: {"state":"428.6","unit_of_measurement":"mm"}
+- **myTopic/rfxcom/0E00EC0/BatteryLow**: {"state":"0"}
+- **myTopic/rfxcom/11006B0/Wind direction**: {"state":"22.5","unit_of_measurement":"°"}
+- **myTopic/rfxcom/11006B0/Speed**: {"state":"2.6","unit_of_measurement":"m/s"}
+- **myTopic/rfxcom/11006B0/SpeedAvg**: {"state":"3.4","unit_of_measurement":"m/s"}
+- **myTopic/rfxcom/11006B0/Battery**: {"state":"100","unit_of_measurement":"%"}
 
 ### Home Assistant
 
@@ -125,20 +134,19 @@ To get the values of the energy monitor in Home Assistant, enter a sensor entry 
    ```yaml
    sensor:
      - platform: mqtt
-       state_topic: "MQTT_Topic/CurrentCost/Temperature"
-       name: "currentcost_temperature"
+       state_topic: "myTopic/rfxcom/0500472/Temperature"
+       name: "rfxcom_0500472_temperature"
        unit_of_measurement: "°C"
        value_template: '{{ value_json.state }}'
 
      - platform: mqtt
-       state_topic: "MQTT_Topic/CurrentCost/Power/Total/Ch1"
-       name: "currentcost_totalpower"
-       unit_of_measurement: "W"
+       state_topic: "myTopic/rfxcom/0500472/Humidity"
+       name: "rfxcom_0500472_humidity"
+       unit_of_measurement: "%"
        value_template: '{{ value_json.state }}'
     
      - platform: mqtt
-       state_topic: "MQTT_Topic/CurrentCost/Power/Appliance1/Ch1"
-       name: "currentcost_power1"
-       unit_of_measurement: "W"
+       state_topic: "myTopic/rfxcom/0500472/BatteryLow"
+       name: "rfxcom_0500472_battery_low"
        value_template: '{{ value_json.state }}'
    ```
